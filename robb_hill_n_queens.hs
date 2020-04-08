@@ -9,53 +9,57 @@ import Data.List
 type Seq   = [Char]
 type Board = [Seq]
 
--- TODO 01/17
+-- TODO 01/17 X
 setup :: Int -> Board
-setup n = setup' n n
-setup' n 0 = [[]]
-setup' n k = [x:y
-  | n < 4 , y <- setup' 4 (k-1), x <- [1..4]
-  | n > 4 , y <- setup' n (k-1), x <- [1..n]
+setup n
+  | n >= 4 = [setup' n | x <- [1..n]]
+  | otherwise = [setup' 4 | x <- [1..4]]
 
--- TODO 02/17
+setup' n = concat ["-"|x <- [1..n]]
+
+-- TODO 02/17 X
 rows :: Board -> Int
 rows b = length b
 
--- TODO 03/17
+-- TODO 03/17 X
 cols :: Board -> Int
 cols b
-  | length colsPerRow
+  | length (nub colsPerRow) == 1 = head colsPerRow
+  | otherwise = 0
   where
     colsPerRow = [ length row | row <- b ]
 
--- TODO 04/17
-size :: Board -> (Int, Int)
-size x, y
-  | x <- cols, y <- rows
+-- TODO 04/17 X
+size :: Board -> Int
+size b
+  | (rows b == cols b) = (rows b)
+  | otherwise = 0
 
--- TODO 05/17
+-- TODO 05/17 X
 queensSeq :: Seq -> Int
-queensSeq s
-  | length count
-  where
-    count = findIndices "Q" s 
+queensSeq s = length (filter (=='Q')s)
 
--- TODO 06/17
+-- TODO 06/17 X
 queensBoard :: Board -> Int
-queensBoard b
-  
+queensBoard b = sum [queensSeq s | s <- b]
 
--- TODO 07/17
+-- TODO 07/17 X
 seqValid :: Seq -> Bool
-seqValid s = False
+seqValid s
+  | queensSeq s > 1 = False
+  | otherwise = True
 
--- TODO 08/17
+-- TODO 08/17 X
 rowsValid :: Board -> Bool
-rowsValid b = False
+rowsValid b
+  | notElem False [seqValid s | s <- b] = True
+  | otherwise = False  
 
 -- TODO 09/17
 colsValid :: Board -> Bool
-colsValid b = False
+colsValid b
+  | t <- c | c 
+  | seqValid s | s <- b
 
 -- TODO 10/17
 diagonals :: Board -> Int
@@ -74,6 +78,9 @@ allMainDiagIndices b = [[]]
 -- TODO 12/17
 mainDiag :: Board -> [Seq]
 mainDiag b = []
+-- get list of tuples
+-- d <- allMainDiagIndices b
+-- [ [ t | t <- d ] | d <- allMainDiagIndices b]
 
 secDiagIndices :: Board -> Int -> [ (Int, Int) ]
 secDiagIndices b p
@@ -117,6 +124,18 @@ solve b
     where i = nextRow b
 
 main = do
-  let b = setup 6
-  let solution = [ solution | solution <- solve b ]
-  print (solution)
+  let a = ["----Q","-Q---","---Q-","Q----","--Q--"]
+  let s = "--Q--"
+  let b = setup 8
+  print (a)
+--  print (rows a)
+--  print (cols a)
+--  print (size a)
+--  print (queensSeq s)
+--  print (queensBoard a)
+--  print (seqValid s)
+--  print (rowsValid a)
+--  print (queensSeq "-Q-Q-QQ-QQQ----")
+--  print (queensBoard ["Q---", "--Q-", "--Q-", "----"])
+--  let solution = [ solution | solution <- solve b ]
+--  print (solution)
