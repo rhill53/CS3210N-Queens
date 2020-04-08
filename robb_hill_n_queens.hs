@@ -23,11 +23,11 @@ rows b = length b
 
 -- TODO 03/17 X
 cols :: Board -> Int
-cols b
-  | length (nub colsPerRow) == 1 = head colsPerRow
-  | otherwise = 0
-  where
-    colsPerRow = [ length row | row <- b ]
+cols b = rows( transpose b)
+--  | length (nub colsPerRow) == 1 = head colsPerRow
+--  | otherwise = 0
+--  where
+--    colsPerRow = [ length row | row <- b ]
 
 -- TODO 04/17 X
 size :: Board -> Int
@@ -55,11 +55,9 @@ rowsValid b
   | notElem False [seqValid s | s <- b] = True
   | otherwise = False  
 
--- TODO 09/17
+-- TODO 09/17 X
 colsValid :: Board -> Bool
-colsValid b
-  | t <- c | c 
-  | seqValid s | s <- b
+colsValid b = rowsValid (transpose b)
 
 -- TODO 10/17
 diagonals :: Board -> Int
@@ -124,7 +122,7 @@ solve b
     where i = nextRow b
 
 main = do
-  let a = ["----Q","-Q---","---Q-","Q----","--Q--"]
+  let a = ["----Q","-Q---","---Q-","Q----","----Q"]
   let s = "--Q--"
   let b = setup 8
   print (a)
@@ -135,6 +133,7 @@ main = do
 --  print (queensBoard a)
 --  print (seqValid s)
 --  print (rowsValid a)
+  print (colsValid a)
 --  print (queensSeq "-Q-Q-QQ-QQQ----")
 --  print (queensBoard ["Q---", "--Q-", "--Q-", "----"])
 --  let solution = [ solution | solution <- solve b ]
